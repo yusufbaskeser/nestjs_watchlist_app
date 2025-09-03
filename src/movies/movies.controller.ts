@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Req } from '@nestjs/common';
 import { MoviesService } from './movies.service';
-import type { RequestWithUser } from '../middleware/tokenCheck';
+import type { Requestt } from '../middleware/tokenCheck';
 
 @Controller('movies')
 export class MoviesController {
@@ -29,7 +29,7 @@ export class MoviesController {
   @Post('createList')
   async createList(
     @Body() body: { listName: string },
-    @Req() req: RequestWithUser,
+    @Req() req: Requestt,
   ) {
     const { user } = req;
     return this.movieService.createMovieList(user.email, body.listName);
