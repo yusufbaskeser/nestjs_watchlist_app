@@ -1,5 +1,6 @@
 import { Controller, Get, Put, Body, Req } from '@nestjs/common';
 import { UserService } from './user.service';
+import { UpdateProfileDto } from './dto/updateUserProfileDto';
 
 @Controller('user')
 export class UserController {
@@ -12,13 +13,9 @@ export class UserController {
 
   @Put('profile')
   async updateProfile(
-    @Req() req, @Body() body: { name?: string; email?: string; password?: string },
+    @Req() req, @Body() body: UpdateProfileDto,
   ) {
     return this.userService.updateProfile(req.user.email, body);
   }
 }
 
-//validations u tamamla
-//movies endpointleri yaz ve apı key ile fetch isteği at arr kullan
-//testleri yaz
-//userMovies tablosu oluştur foreign key ile user tablosuna bağla

@@ -1,6 +1,9 @@
 import { Controller, Get, Post, Body, Param, Req } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import type { Requestt } from '../middleware/tokenCheck';
+import { CreateListDto } from './dto/createListDto';
+import { AddToListDto } from './dto/addToListDto';
+import { SearchMovieDto } from './dto/searchMovieDto';
 
 @Controller('movies')
 export class MoviesController {
@@ -22,13 +25,13 @@ export class MoviesController {
   }
 
   @Get('search/:name')
-  async searchMovie(@Param('name') name: string) {
-    return this.movieService.searchMovieByName(name);
+  async searchMovie(@Param() params : SearchMovieDto) {
+    return this.movieService.searchMovieByName(params.name);
   }
 
   @Post('createList')
   async createList(
-    @Body() body: { listName: string },
+    @Body() body:  CreateListDto ,
     @Req() req: Requestt,
   ) {
     const { user } = req;
@@ -38,8 +41,8 @@ export class MoviesController {
   @Post('addToList/:listId')
   async addToList(
     @Param('listId') listId: number,
-    @Body() body: { movieName: string },
+    @Body() body: AddToListDto,
   ) {
-    return this.movieService.addMovieToList(listId, body.movieName);
+    return this.movieService.addMovieToList(listId, body.movieId);
   }
 }

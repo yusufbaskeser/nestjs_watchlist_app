@@ -1,6 +1,11 @@
 import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import {
+  BadRequestException,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 
 export async function validateRegister(
   userRepo: Repository<User>,
@@ -9,20 +14,20 @@ export async function validateRegister(
   password: string,
 ) {
   if (!name || !name.trim()) {
-    throw new Error('Name cannot be empty');
+    throw new BadRequestException('Name cannot be empty');
   }
 
   if (!email || !email.trim()) {
-    throw new Error('Email cannot be empty');
+    throw new BadRequestException('Email cannot be empty');
   }
 
   if (!password || !password.trim()) {
-    throw new Error('Password cannot be empty');
+    throw new BadRequestException('Password cannot be empty');
   }
 
   const existingUser = await userRepo.findOne({ where: { email } });
   if (existingUser) {
-    throw new Error('User with this email already exists');
+    throw new ConflictException('User with this email already exists');
   }
 
   const allUsers = await userRepo.find();
@@ -30,7 +35,9 @@ export async function validateRegister(
     const user = allUsers[i];
     const isSame = await bcrypt.compare(password, user.password);
     if (isSame) {
-      throw new Error('This password has already been used by another user');
+      throw new ConflictException(
+        'This password has already been used by another user',
+      );
     }
   }
 }
@@ -40,18 +47,17 @@ export async function validateLogin(
   email: string,
   password: string,
 ) {
-  if (!email || !email.trim()) {
-    throw new Error('Email cannot be empty');
+  
+  if (!email?.trim() || !password?.trim()) {
+    throw new BadRequestException('Email and password cannot be empty');
   }
-
-  if (!password || !password.trim()) {
-    throw new Error('Password cannot be empty');
-  }
+  
 
   const user = await userRepo.findOne({ where: { email } });
-  if (!user) throw new Error('User not found');
+  if (!user) throw new UnauthorizedException('User not found');
 
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error('Invalid password');
+  if (!isMatch) throw new UnauthorizedException('User not found');
+
   return user;
 }

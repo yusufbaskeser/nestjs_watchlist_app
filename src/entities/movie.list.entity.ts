@@ -11,6 +11,6 @@ export class movieList {
   @Column()
   listName: string;
 
-  @Column({ default: '' })
+  @Column('text', { array: true, default: '{}' })
   movies: string[];
 }

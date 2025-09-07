@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
-import { tokenCheck } from 'src/middleware/tokenCheck';
+import { tokenCheck } from '../middleware/tokenCheck';
 import { MoviesController } from './movies.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { movieList } from '../entities/movie.list.entity';

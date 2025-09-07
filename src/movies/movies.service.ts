@@ -67,17 +67,17 @@ export class MoviesService {
     return this.movieRepository.save(newList);
   }
 
-  async addMovieToList(listId: number, movieName: string) {
+  async addMovieToList(listId: number, movieId: string) {
     const list = await this.movieRepository.findOne({ where: { listId } });
 
     validateMoviesList(list);
 
     const res = await fetch(
-      `${process.env.BASE_URL}/search/movie?api_key=${process.env.API_KEY}&query=${encodeURIComponent(movieName)}&language=tr-TR&page=1`,
+      `${process.env.BASE_URL}/search/movie?api_key=${process.env.API_KEY}&query=${encodeURIComponent(movieId)}&language=tr-TR&page=1`,
     );
     const data = await res.json();
 
-    validateMovieIncludeList(list, movieName);
+    validateMovieIncludeList(list, movieId);
     validateMovieFound(data);
 
     const movie = data.results[0];

@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 
 export function validateResponse(response: any) {
     if (!response.ok) {
@@ -6,7 +7,7 @@ export function validateResponse(response: any) {
   }
 
 export function validateMoviesList(list: any): asserts list {
-    if (!list) throw new Error('List not found');
+    if (!list) throw new NotFoundException('List not found');
   }
   
   export function validateMovieIncludeList(list: any, movieName: string) {
@@ -20,4 +21,3 @@ export function validateMoviesList(list: any): asserts list {
       throw new Error('Movie not found in TMDB');
     }
   }
-  

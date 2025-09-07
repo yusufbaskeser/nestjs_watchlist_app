@@ -16,6 +16,7 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { email } });
 validateUserExists(user);
     return {
+      message : 'User profile shown successfully',
       name: user.name,
       email: user.email,
     };
