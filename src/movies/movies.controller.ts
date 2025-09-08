@@ -25,24 +25,33 @@ export class MoviesController {
   }
 
   @Get('search/:name')
-  async searchMovie(@Param() params : SearchMovieDto) {
+  async searchMovie(@Param() params: SearchMovieDto) {
     return this.movieService.searchMovieByName(params.name);
   }
 
-  @Post('createList')
-  async createList(
-    @Body() body:  CreateListDto ,
-    @Req() req: Requestt,
-  ) {
+  @Get('publicLists')
+  async getPublicLists() {
+    return this.movieService.getPublicLists();
+  }
+
+  @Get('userFavorites')
+  async getUserFavorites(@Req() req: Requestt) {
     const { user } = req;
-    return this.movieService.createMovieList(user.email, body.listName);
+    return this.movieService.getUserFavorites(user.email);
+  }
+
+  @Post('createList')
+  async createList(@Body() body: CreateListDto, @Req() req: Requestt) {
+    const { user } = req;
+    return this.movieService.createMovieList(
+      user.email,
+      body.listName,
+      body.isPublic,
+    );
   }
 
   @Post('addToList/:listId')
-  async addToList(
-    @Param('listId') listId: number,
-    @Body() body: AddToListDto,
-  ) {
+  async addToList(@Param('listId') listId: number, @Body() body: AddToListDto) {
     return this.movieService.addMovieToList(listId, body.movieId);
   }
 }

@@ -87,5 +87,6 @@ describe('AuthController (E2E)', () => {
     expect(res.body.message).toEqual([
       'email must be an email',
       'password should not be empty',
-    ]);  });
+    ]);
+  });
 });

@@ -47,11 +47,9 @@ export async function validateLogin(
   email: string,
   password: string,
 ) {
-  
   if (!email?.trim() || !password?.trim()) {
     throw new BadRequestException('Email and password cannot be empty');
   }
-  
 
   const user = await userRepo.findOne({ where: { email } });
   if (!user) throw new UnauthorizedException('User not found');

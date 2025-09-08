@@ -5,7 +5,7 @@ import { AppModule } from '../../app.module';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
 import { Repository } from 'typeorm';
-import { registerTest} from '../../auth/test/auth.utils.test/auth.utils'
+import { registerTest } from '../../auth/test/auth.utils.test/auth.utils';
 
 describe('UserController (E2E)', () => {
   let app: INestApplication;
@@ -22,9 +22,9 @@ describe('UserController (E2E)', () => {
 
     userRepo = moduleFixture.get<Repository<User>>(getRepositoryToken(User));
   });
-afterEach(async()=>{
-  await userRepo.clear();
-})
+  afterEach(async () => {
+    await userRepo.clear();
+  });
 
   beforeEach(async () => {
     await userRepo.clear();
@@ -33,9 +33,6 @@ afterEach(async()=>{
   afterAll(async () => {
     await app.close();
   });
-
-
-
 
   it('GET /user/profile → should show profile succfesfully', async () => {
     const { token } = await registerTest(
@@ -53,37 +50,28 @@ afterEach(async()=>{
     expect(res.body).not.toEqual({});
     expect(res.body.email).toBe('test123@test.com');
     expect(res.body.name).toBe('yusuf');
-    
+
     expect(res.body.message).toBeDefined();
-expect(res.body.message).toBe('User profile shown successfully');
+    expect(res.body.message).toBe('User profile shown successfully');
   });
 
+  it('PUT /user/profile → should update user info succesfully', async () => {
+    const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'yusuf12@test.com',
+      'yusuf123',
+    );
 
+    const res = await request(app.getHttpServer())
+      .put('/user/profile')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: 'yusufkral', email: 'kral12@test.com' })
+      .expect(200);
 
-it('PUT /user/profile → should update user info succesfully', async () => {
-
-
-  const { token } = await registerTest(
-    userRepo,
-    'yusuf',
-    'yusuf12@test.com',
-    'yusuf123',
-  );
-
-
-  const res = await request(app.getHttpServer())
-    .put('/user/profile')
-    .set('Authorization', `Bearer ${token}`) 
-    .send({ name: 'yusufkral', email: 'kral12@test.com' }) 
-    .expect(200);
-
-
-  expect(res.body).not.toEqual({});
-  expect(res.body.message).toBe('Profile updated successfully');
-  expect(res.body.email).toBe('kral12@test.com');
-  expect(res.body.name).toBe('yusufkral');
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toBe('Profile updated successfully');
+    expect(res.body.email).toBe('kral12@test.com');
+    expect(res.body.name).toBe('yusufkral');
   });
-
 });
-
-

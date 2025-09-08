@@ -3,8 +3,6 @@ import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
 import { generateJwtToken } from 'src/utils/generateJwtToken';
 
-
-
 export async function registerTest(
   usersRepository: Repository<User>,
   name: string,

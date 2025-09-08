@@ -11,6 +11,9 @@ export class movieList {
   @Column()
   listName: string;
 
-  @Column('text', { array: true, default: '{}' })
-  movies: string[];
+  @Column('integer', { array: true, default: '{}' })
+  movies: number[];
+
+  @Column({ default: false })
+  isPublic: boolean;
 }

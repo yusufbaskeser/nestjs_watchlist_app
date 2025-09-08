@@ -1,8 +1,7 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class AddToListDto {
   @IsNotEmpty()
-  @IsString()
-  movieId: string;
+  @IsNumber()
+  movieId: number;
 }

@@ -54,6 +54,6 @@ export class AppModule implements NestModule {
         { path: 'auth/register', method: RequestMethod.POST },
         { path: 'auth/login', method: RequestMethod.POST },
       )
-      .forRoutes(AuthController, MoviesController , UserController);
+      .forRoutes(AuthController, MoviesController, UserController);
   }
 }

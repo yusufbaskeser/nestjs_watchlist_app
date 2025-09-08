@@ -13,7 +13,7 @@ import { generateJwtToken } from '../utils/generateJwtToken';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) 
+    @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
 

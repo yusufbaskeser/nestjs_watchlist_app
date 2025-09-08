@@ -14,9 +14,9 @@ export class UserService {
 
   async getProfile(email: string) {
     const user = await this.userRepository.findOne({ where: { email } });
-validateUserExists(user);
+    validateUserExists(user);
     return {
-      message : 'User profile shown successfully',
+      message: 'User profile shown successfully',
       name: user.name,
       email: user.email,
     };
@@ -27,7 +27,7 @@ validateUserExists(user);
     body: { name?: string; email?: string; password?: string },
   ) {
     const user = await this.userRepository.findOne({ where: { email } });
-validateUserExists(user);
+    validateUserExists(user);
     if (body.name) user.name = body.name;
     if (body.email) user.email = body.email;
     if (body.password) {
