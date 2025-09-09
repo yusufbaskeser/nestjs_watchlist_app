@@ -34,7 +34,7 @@ describe('UserController (E2E)', () => {
     await app.close();
   });
 
-  it('GET /user/profile → should show profile succfesfully', async () => {
+  it('GET /user/profile should show profile succfesfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -55,7 +55,37 @@ describe('UserController (E2E)', () => {
     expect(res.body.message).toBe('User profile shown successfully');
   });
 
-  it('PUT /user/profile → should update user info succesfully', async () => {
+
+  it('GET /user/profile should fail without token ', async () => {
+   
+
+    const res = await request(app.getHttpServer())
+      .get('/user/profile')
+      .expect(401);
+
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toBe('Token missing or invalid')
+
+    expect(res.body.message).toBeDefined();
+  });
+
+
+
+  it('GET /user/profile  should fail with invalid token', async () => {
+   
+
+    const res = await request(app.getHttpServer())
+      .get('/user/profile')
+      .set('Authorization', `Bearer token123`)
+      .expect(401);
+
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toBe('Invalid or expired token')
+
+    expect(res.body.message).toBeDefined();
+  });
+
+  it('PUT /user/profile should update user info succesfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -74,4 +104,60 @@ describe('UserController (E2E)', () => {
     expect(res.body.email).toBe('kral12@test.com');
     expect(res.body.name).toBe('yusufkral');
   });
-});
+
+  it('PUT /user/profile should fail when name and email is empty', async () => {
+    const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'yusuf12@test.com',
+      'yusuf123',
+    );
+
+    const res = await request(app.getHttpServer())
+      .put('/user/profile')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: '', email: '' })
+      .expect(400);
+
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toEqual([
+      'email must be an email',
+    ]);
+  });    
+
+
+  it('PUT /user/profile should fail without token ', async () => {
+   
+
+    const res = await request(app.getHttpServer())
+      .put('/user/profile')
+      .send({ name: 'yusuf123', email: 'yusuf123213@gmail.com' })
+
+      .expect(401);
+
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toBe('Token missing or invalid')
+
+    expect(res.body.message).toBeDefined();
+  });
+
+  it('PUT /user/profile should fail with invalid token', async () => {
+   
+
+    const res = await request(app.getHttpServer())
+      .put('/user/profile')
+      .set('Authorization', `Bearer token123`)
+      .send({ name: 'yusuf123', email: 'yusuf123213@gmail.com' })
+      .expect(401);
+
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toBe('Invalid or expired token')
+
+    expect(res.body.message).toBeDefined();
+  });
+
+
+  });
+
+
+

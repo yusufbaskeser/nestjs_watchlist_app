@@ -31,7 +31,7 @@ describe('AuthController (E2E)', () => {
     await app.close();
   });
 
-  it('POST /auth/register → should register successfully', async () => {
+  it('POST /auth/register should register successfully', async () => {
     const res = await request(app.getHttpServer())
       .post('/auth/register')
       .send({ name: 'yusuf', email: 'yusuf@test.com', password: 'yusuf123' })
@@ -42,7 +42,10 @@ describe('AuthController (E2E)', () => {
     expect(res.body.access_token).toBeDefined();
   });
 
-  it('POST /auth/register → should fail if name and password empty', async () => {
+
+ 
+
+  it('POST /auth/register should fail if name and password empty', async () => {
     const res = await request(app.getHttpServer())
       .post('/auth/register')
       .send({ name: '', email: '', password: '' })
@@ -50,9 +53,12 @@ describe('AuthController (E2E)', () => {
 
     expect(res.body).not.toEqual({});
     expect(res.body.message).toBeDefined();
+    expect(res.body.message).toEqual(
+      expect.arrayContaining(["name should not be empty", "email must be an email", "password should not be empty"]),
+    );
   });
 
-  it('POST /auth/login → should login successfully', async () => {
+  it('POST /auth/login should login successfully', async () => {
     await registerTest(userRepo, 'yusuf', 'yusuf@test.com', 'yusuf123');
 
     const res = await request(app.getHttpServer())
@@ -65,7 +71,7 @@ describe('AuthController (E2E)', () => {
     expect(res.body.access_token).toBeDefined();
   });
 
-  it('POST /auth/login → should fail with wrong email and password', async () => {
+  it('POST /auth/login should fail with wrong email and password', async () => {
     await registerTest(userRepo, 'yusuf', 'yusuf@test.com', 'yusuf123');
 
     const res = await request(app.getHttpServer())
@@ -77,7 +83,7 @@ describe('AuthController (E2E)', () => {
     expect(res.body.message).toBe('User not found');
   });
 
-  it('POST /auth/login → should fail if email and password is empty', async () => {
+  it('POST /auth/login should fail if email and password is empty', async () => {
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send({ email: '', password: '' })

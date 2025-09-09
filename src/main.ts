@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { ValidationPipe } from '@nestjs/common';
+import{config} from './config/config'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,6 +22,6 @@ async function bootstrap() {
   io.on('connection', (socket) => {
     console.log('a user connected');
   });
-  await app.listen(Number(process.env.PORT));
+  await app.listen(Number(config.PORT));
 }
 bootstrap();

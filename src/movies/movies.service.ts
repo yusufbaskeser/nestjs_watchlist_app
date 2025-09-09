@@ -26,6 +26,17 @@ export class MoviesService {
     return data.results;
   }
 
+  async searchSoonMovies(){
+    
+    const response = await fetch(
+      `${process.env.BASE_URL}/movie/upcoming?api_key=${process.env.API_KEY}&language=tr-TR&page=1`,
+    );
+    validateResponse(response);
+    const data = await response.json();
+    return data.results;
+
+  }
+
   async searchTrendingMovies() {
     const response = await fetch(
       `${process.env.BASE_URL}/trending/movie/week?api_key=${process.env.API_KEY}&language=tr-TR`,
@@ -89,5 +100,34 @@ export class MoviesService {
 
     list.movies.push(movie.id);
     return this.movieRepository.save(list);
+  }
+
+
+  async changeList(listId:number,listName:string,isPublic:boolean){
+    const list = await this.movieRepository.findOne({where : { listId}});
+    validateMoviesList(list);
+    list.listName = listName;
+    list.isPublic = isPublic;
+    return this.movieRepository.save(list);
+
+  }
+
+
+  async deleteList(listId : number ){
+    const list = await this.movieRepository.findOne({where : {listId}});
+    validateMoviesList(list);
+ 
+    await this.movieRepository.delete({listId});
+    return {message : 'list deleted successfully'}
+  }
+
+
+  async removeMovieFromList(listId : number, movieId : number){
+    const list = await this.movieRepository.findOne({where: {listId}});
+    validateMoviesList(list);
+    validateMovieIncludeList(list,movieId);
+    list.movies = list.movies.filter(id => id !== movieId);
+    return this.movieRepository.save(list);
+
   }
 }

@@ -58,7 +58,26 @@ describe('MoviesController (E2E)', () => {
     expect(res.body[0].title).toBeDefined();
   });
 
-  it('GET /movies/searchPopular → should fail without token', async () => {
+  it('GET /movies/searchSoonMovies should show soon movies successfully', async () => {
+    const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'test12345@test.com',
+      '12345678',
+    );
+
+    const res = await request(app.getHttpServer())
+      .get('/movies/searchSoonMovies')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(res.body).toBeInstanceOf(Array);
+    expect(res.body.length).toBeGreaterThan(0);
+    expect(res.body[0].title).toBeDefined();
+  });
+
+
+  it('GET /movies/searchPopular should fail without token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/searchPopular')
       .expect(401);
@@ -66,7 +85,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Token missing or invalid');
   });
 
-  it('GET /movies/searchPopular → should fail with invalid token', async () => {
+  it('GET /movies/searchPopular should fail with invalid token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/searchPopular')
       .set('Authorization', `Bearer invalidtoken123`)
@@ -75,7 +94,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Invalid or expired token');
   });
 
-  it('GET /movies/searchTrending → should show Trending movies successfully', async () => {
+  it('GET /movies/searchTrending should show Trending movies successfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -93,7 +112,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body[0].title).toBeDefined();
   });
 
-  it('GET /movies/searchTrending → should fail without token', async () => {
+  it('GET /movies/searchTrending should fail without token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/searchTrending')
       .expect(401);
@@ -110,7 +129,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Invalid or expired token');
   });
 
-  it('GET /movies/searchTopRated → should show Top Rated movies successfully', async () => {
+  it('GET /movies/searchTopRated should show Top Rated movies successfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -128,7 +147,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body[0].title).toBeDefined();
   });
 
-  it('GET /movies/searchTopRated → should fail without token', async () => {
+  it('GET /movies/searchTopRated should fail without token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/searchTopRated')
       .expect(401);
@@ -136,7 +155,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Token missing or invalid');
   });
 
-  it('GET /movies/searchTopRated → should fail with invalid token', async () => {
+  it('GET /movies/searchTopRated should fail with invalid token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/searchTopRated')
       .set('Authorization', `Bearer invalidtoken123`)
@@ -145,7 +164,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Invalid or expired token');
   });
 
-  it('GET /movies/search/:name → should show searched movie successfully', async () => {
+  it('GET /movies/search/:name should show searched movie successfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -163,7 +182,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body[0].title).toBeDefined();
   });
 
-  it('GET /movies/search/:name → should fail without token', async () => {
+  it('GET /movies/search/:name should fail without token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/search/Avatar')
       .expect(401);
@@ -171,7 +190,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Token missing or invalid');
   });
 
-  it('GET /movies/search/:name → should fail with invalid token', async () => {
+  it('GET /movies/search/:name should fail with invalid token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/search/Avatar')
       .set('Authorization', `Bearer invalidtoken123`)
@@ -182,7 +201,7 @@ describe('MoviesController (E2E)', () => {
 
   /////// /movies/publicLists tests /////
 
-  it('GET /movies/publicLists → should show public lists all of the users', async () => {
+  it('GET /movies/publicLists should show public lists all of the users', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -211,7 +230,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.length).toBeGreaterThan(0);
   });
 
-  it('GET /movies/publicLists → should fail without token', async () => {
+  it('GET /movies/publicLists should fail without token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/publicLists')
       .expect(401);
@@ -219,7 +238,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Token missing or invalid');
   });
 
-  it('GET /movies/publicLists → should fail with invalid token', async () => {
+  it('GET /movies/publicLists should fail with invalid token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/publicLists')
       .set('Authorization', `Bearer invalidtoken123`)
@@ -230,7 +249,7 @@ describe('MoviesController (E2E)', () => {
 
   /////// GET /movies/userFavorites tests //////
 
-  it('GET /movies/userFavorites → should get user favorites successfully', async () => {
+  it('GET /movies/userFavorites should get user favorites successfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -246,7 +265,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body).toBeInstanceOf(Array);
   });
 
-  it('GET /movies/userFavorites → should fail without token', async () => {
+  it('GET /movies/userFavorites should fail without token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/userFavorites')
       .expect(401);
@@ -254,7 +273,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Token missing or invalid');
   });
 
-  it('GET /movies/userFavorites → should fail with invalid token', async () => {
+  it('GET /movies/userFavorites should fail with invalid token', async () => {
     const res = await request(app.getHttpServer())
       .get('/movies/userFavorites')
       .set('Authorization', `Bearer invalidtoken123`)
@@ -265,7 +284,7 @@ describe('MoviesController (E2E)', () => {
 
   //// POST /movies/creaList tests /////
 
-  it('POST /movies/createList → should create a public list successfully', async () => {
+  it('POST /movies/createList should create a public list successfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -284,7 +303,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.isPublic).toBe(true);
   });
 
-  it('POST /movies/createList → should create a private list successfully', async () => {
+  it('POST /movies/createList should create a private list successfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -303,7 +322,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.isPublic).toBe(false);
   });
 
-  it('POST /movies/createList → should fail if listName is not provided', async () => {
+  it('POST /movies/createList should fail if listName is not providad', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -325,7 +344,7 @@ describe('MoviesController (E2E)', () => {
     );
   });
 
-  it('POST /movies/createList → should fail without token', async () => {
+  it('POST /movies/createList should fail without token', async () => {
     const res = await request(app.getHttpServer())
       .post('/movies/createList')
       .send({ listName: 'My List', isPublic: true })
@@ -334,7 +353,7 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBe('Token missing or invalid');
   });
 
-  it('POST /movies/createList → should fail with invalid token', async () => {
+  it('POST /movies/createList should fail with invalid token', async () => {
     const res = await request(app.getHttpServer())
       .post('/movies/createList')
       .set('Authorization', `Bearer invalidtoken123`)
@@ -346,7 +365,7 @@ describe('MoviesController (E2E)', () => {
 
   ///// POST /movies/addToList/:listId tests//////
 
-  it('POST /movies/addToList/:listId → should add movie successfully', async () => {
+  it('POST /movies/addToList/:listId should add movie successfully', async () => {
     const { token } = await registerTest(
       userRepo,
       'yusuf',
@@ -448,4 +467,206 @@ describe('MoviesController (E2E)', () => {
     expect(res.body.message).toBeDefined();
     expect(res.body.message).toBe('List not found');
   });
+
+
+  /////PUT changeList/:listId tests//////
+  it('PUT /movies/changeList/:listId  should change listname and isPublic successfully', async()=>{
+    const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'test4@test.com',
+      '12345678',
+    );
+
+    const list = await createListTest(app, token, 'Change List' , false);
+
+
+    const res = await request(app.getHttpServer())
+    .put('/user/profile')
+    .set('Authorization', `Bearer ${token}`)
+    .send({ listName: 'yusufkral', isPublic: true })
+    .expect(200);
+
+  })
+
+  it('POST /movies/changeList/:listId should fail if listId does not exist', async () => {
+    const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'test4@test.com',
+      '12345678',
+    );
+
+    const res = await request(app.getHttpServer())
+      .post(`/movies/addToList/999999`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ movieId: 1 })
+      .expect(404);
+
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toBeDefined();
+    expect(res.body.message).toBe('List not found');
+  });
+
+
+  it('PUT /movies/changeList/:listId  should fail if no token is provided', async()=>{
+    const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'test4@test.com',
+      '12345678',
+    );
+
+    const list = await createListTest(app, token, 'Change List' , false);
+
+
+    const res = await request(app.getHttpServer())
+    .put('/user/profile')
+    .send({ listName: 'yusufkral', isPublic: true })
+    .expect(401);
+
+
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toBeDefined();
+    expect(res.body.message).toContain('Token missing or invalid');
+
+  })
+
+  it('PUT /movies/changeList/:listId  should fail if token is expired or invalid', async()=>{
+    const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'test4@test.com',
+      '12345678',
+    );
+
+    const list = await createListTest(app, token, 'Change List' , false);
+
+
+    const res = await request(app.getHttpServer())
+    .put('/user/profile')
+    .set('Authorization', 'Bearer expiredToken')
+
+    .send({ listName: 'yusufkral', isPublic: true })
+    .expect(401);
+
+    expect(res.body).not.toEqual({});
+    expect(res.body.message).toBeDefined();
+    expect(res.body.message).toBe('Invalid or expired token');
+
+  })
+
+///// delete /movies/deleteList/:listId tests/////
+
+it('DELETE /movies/deleteList/:listId should delete list successfully', async()=>{
+  const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'test4@test.com',
+      '12345678',
+    );
+    const list = await createListTest(app, token, 'Delete List', false);
+    const res = await request(app.getHttpServer())
+    .delete(`/movies/deleteList/${list.listId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200);
+
+    expect(res.body).toBeDefined();
+    expect(res.body.message).toBe('list deleted successfully');
+
+})
+
+
+
+it('DELETE /movies/deleteList/:listId should fail if listId does not exist', async()=>{
+  const { token } = await registerTest(
+      userRepo,
+      'yusuf',
+      'test4@test.com',
+      '12345678',
+    );
+
+
+    const res = await request(app.getHttpServer())
+    .delete('/movies/deleteList/999999')
+    .set('Authorization', `Bearer ${token}`)
+    .expect(404);
+
+    expect(res.body).toBeDefined();
+    expect(res.body.message).toBe('List not found');
+
+})
+
+it('DELETE /movies/deleteList/:listId should fail if no token is provided', async()=>{
+ 
+
+    const res = await request(app.getHttpServer())
+    .delete('/movies/deleteList/999999')
+    .expect(401);
+
+    expect(res.body).toBeDefined();
+    expect(res.body.message).toBe('Token missing or invalid');
+
+})
+
+it('DELETE /movies/deleteList/:listId should fail if token is expired or invalid', async()=>{
+ 
+
+  const res = await request(app.getHttpServer())
+  .delete('/movies/deleteList/999999')
+  .set('Authorization', 'Bearer expiredToken')
+  .expect(401);
+
+  expect(res.body).toBeDefined();
+  expect(res.body.message).toBe('Invalid or expired token');
+
+})
+
+
+
+////// delete /removeMovieFromList/:listId/:movieId tests /////
+
+it('DELETE /movies/removeMovieFromList/:listId/:movieId should remove movie from list successfully', async()=>{
+  const { token } = await registerTest(
+    userRepo,
+    'yusuf',
+    'test4@test.com',
+    '12345678',
+  );
+  const list = await createListTest(app, token, 'Remove Movie List', false);
+
+  await addMovieToListTest(app, token, list.listId, {movieId : 27205});
+
+  const res = await request(app.getHttpServer())
+  .delete(`/movies/removeMovieFromList/${list.listId}/27205`)
+  .set('Authorization', `Bearer ${token}`)
+  .expect(200);
+
+  expect(res.body).toBeDefined();
+  expect(res.body.movies).toBeInstanceOf(Array);
+
+  
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 });
+
+
+
+
+
+
+
+
+

@@ -16,6 +16,7 @@ import { UserModule } from './user/user.module';
 import { MoviesModule } from './movies/movies.module';
 import { MoviesController } from './movies/movies.controller';
 import { UserController } from './user/user.controller';
+import {config} from './config/config';
 
 @Module({
   imports: [
@@ -26,11 +27,11 @@ import { UserController } from './user/user.controller';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USER'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
+        host: configService.get<string>(config.DB.HOST!),
+        port: configService.get<number>(config.DB.PORT!),
+        username: configService.get<string>(config.DB.USER!),
+        password: configService.get<string>(config.DB.PASSWORD!),
+        database: configService.get<string>(config.DB.NAME!),
         entities: [User, movieList],
         synchronize: true,
         ssl: {
