@@ -2,26 +2,41 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../app.module';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { getRepositoryToken, TypeOrmModule} from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
 import { Repository } from 'typeorm';
 import { registerTest } from './auth.utils.test/auth.utils';
+import {config} from '../../config/config'
+import { movieList } from 'src/entities/movie.list.entity';
 
 describe('AuthController (E2E)', () => {
   let app: INestApplication;
   let userRepo: Repository<User>;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-    await app.init();
-
-    userRepo = moduleFixture.get<Repository<User>>(getRepositoryToken(User));
-  });
+      const moduleFixture: TestingModule = await Test.createTestingModule({
+        imports: [
+          AppModule,
+          TypeOrmModule.forRoot({
+            type: 'postgres',
+            host: config.DB_DUMMY.HOST,
+            port: config.DB_DUMMY.PORT,
+            username: config.DB_DUMMY.USER,
+            password: config.DB_DUMMY.PASSWORD,
+            database: config.DB_DUMMY.NAME,
+            entities: [User, movieList],
+            synchronize: true,
+            ssl: config.DB_DUMMY.SSL ? { rejectUnauthorized: false } : undefined,
+          }),
+        ],
+      }).compile();
+    
+      app = moduleFixture.createNestApplication();
+      app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+      await app.init();
+    
+      userRepo = moduleFixture.get<Repository<User>>(getRepositoryToken(User));
+    });
 
   beforeEach(async () => {
     await userRepo.clear();

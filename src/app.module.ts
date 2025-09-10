@@ -20,25 +20,23 @@ import {config} from './config/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+   
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      imports: [ConfigModule], 
+      useFactory: () => ({
         type: 'postgres',
-        host: configService.get<string>(config.DB.HOST!),
-        port: configService.get<number>(config.DB.PORT!),
-        username: configService.get<string>(config.DB.USER!),
-        password: configService.get<string>(config.DB.PASSWORD!),
-        database: configService.get<string>(config.DB.NAME!),
+        host: config.DB.HOST,
+        port: config.DB.PORT,
+        username: config.DB.USER,
+        password: config.DB.PASSWORD,
+        database: config.DB.NAME,
         entities: [User, movieList],
         synchronize: true,
         ssl: {
           rejectUnauthorized: false,
         },
       }),
-      inject: [ConfigService],
+      inject: [], 
     }),
     AuthModule,
     UserModule,
@@ -55,6 +53,6 @@ export class AppModule implements NestModule {
         { path: 'auth/register', method: RequestMethod.POST },
         { path: 'auth/login', method: RequestMethod.POST },
       )
-      .forRoutes(AuthController, MoviesController, UserController);
+      .forRoutes(MoviesController, UserController);
   }
 }
